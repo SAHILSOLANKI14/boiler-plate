@@ -1,13 +1,7 @@
-import Layout from '@/layouts/layout';
+import { RoutesList } from '@/routes/routesList';
 
 function App() {
-  return (
-    <>
-      <Layout>
-        <h1>Hello World</h1>
-      </Layout>
-    </>
-  );
+  return <RoutesList />;
 }
 
 export default App;

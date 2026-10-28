@@ -1,17 +1,14 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import Footer from '@/layouts/footer/footer';
 import Header from '@/layouts/header/header';
 import Sidebar from '@/layouts/sidebar/sidebar';
 import './layout.css';
 
-type LayoutProps = {
-  children: ReactNode;
-};
-
 const desktopQuery = '(min-width: 769px)';
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.matchMedia(desktopQuery).matches);
 
   useEffect(() => {
@@ -40,7 +37,9 @@ const Layout = ({ children }: LayoutProps) => {
       ) : null}
       <div className="layout-column">
         <Header isSidebarOpen={isSidebarOpen} onMenuClick={toggleSidebar} />
-        <main className="layout-main">{children}</main>
+        <main className="layout-main">
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </div>

@@ -1,17 +1,14 @@
 export interface ApiEndpoints {
   login: string;
-  getUserProfile: string;
-  getProducts: string;
 }
 
 export const apiEndpoints: ApiEndpoints = {
   login: '/login',
-  getUserProfile: '/user/profile',
-  getProducts: '/products',
 };
 
 export interface ApiConfig {
   baseUrl: string;
+  apiKey: string;
   timeout: number;
   headers: Record<string, string>;
   endpoints: ApiEndpoints;

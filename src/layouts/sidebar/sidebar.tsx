@@ -1,4 +1,7 @@
+import { NavLink } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@/shared/components';
+
 import navList from './navList.json';
 
 type SidebarProps = {
@@ -26,10 +29,10 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         <ul>
           {navList.items.map((item) => (
             <li key={item.path}>
-              <a href={item.path} aria-label={item.name} aria-current={item.path === '/' ? 'page' : undefined}>
+              <NavLink to={item.path} end aria-label={item.name}>
                 <FontAwesomeIcon icon={item.icon} fixedWidth />
                 <span className="sidebar-label">{item.name}</span>
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
