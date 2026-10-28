@@ -2,7 +2,8 @@
   "items": [
     {
       "name": "Home",
-      "path": "/"
+      "path": "/",
+      "icon": "house"
     }
   ]
 }

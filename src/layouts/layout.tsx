@@ -32,7 +32,9 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className={isSidebarOpen ? 'layout is-sidebar-open' : 'layout'}>
-      <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
+      <div className="sidebar-slot">
+        <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
+      </div>
       {isSidebarOpen ? (
         <button type="button" className="sidebar-backdrop" aria-label="Close sidebar" onClick={toggleSidebar} />
       ) : null}

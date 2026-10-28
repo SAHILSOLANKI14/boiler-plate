@@ -26,8 +26,9 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
         <ul>
           {navList.items.map((item) => (
             <li key={item.path}>
-              <a href={item.path} aria-current={item.path === '/' ? 'page' : undefined}>
-                {item.name}
+              <a href={item.path} aria-label={item.name} aria-current={item.path === '/' ? 'page' : undefined}>
+                <FontAwesomeIcon icon={item.icon} fixedWidth />
+                <span className="sidebar-label">{item.name}</span>
               </a>
             </li>
           ))}
