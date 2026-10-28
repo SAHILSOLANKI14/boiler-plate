@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
-import { palettes, type PaletteId } from './palettes';
+import { getPalette, palettes, type PaletteColors, type PaletteId } from './palettes';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -59,9 +59,23 @@ export function readTheme(): ThemeChoice {
   }
 }
 
+const colorGroups = ['background', 'text', 'brand', 'feedback'] as const satisfies readonly (keyof PaletteColors)[];
+
+function applyPaletteColors(colors: PaletteColors): void {
+  const style = document.documentElement.style;
+
+  for (const group of colorGroups) {
+    for (const [token, value] of Object.entries(colors[group])) {
+      style.setProperty(`--${group}-${token}`, value);
+    }
+  }
+}
+
 export function applyTheme(theme: ThemeChoice): void {
-  document.documentElement.dataset.palette = theme.palette;
-  document.documentElement.dataset.mode = theme.mode;
+  const root = document.documentElement;
+  root.dataset.palette = theme.palette;
+  root.dataset.mode = theme.mode;
+  applyPaletteColors(getPalette(theme.palette).theme[theme.mode]);
 }
 
 function storeTheme(theme: ThemeChoice): void {

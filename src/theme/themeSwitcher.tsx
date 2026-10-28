@@ -13,7 +13,7 @@ const ThemeSwitcher = () => {
       <fieldset className="theme-palette">
         <legend>Color palette</legend>
         {palettes.map((item) => (
-          <label key={item.id} className="theme-swatch" style={{ '--swatch': item.swatch } as CSSProperties} title={item.label}>
+          <label key={item.id} className="theme-swatch" style={{ '--swatch': item.theme.light.brand.primary } as CSSProperties} title={item.label}>
             <input
               type="radio"
               name="color-palette"
