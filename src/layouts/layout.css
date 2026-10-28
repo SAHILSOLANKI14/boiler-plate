@@ -77,7 +77,24 @@
   border-radius: 8px;
   background: var(--background-default);
   color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
+}
+
+.layout-menu i,
+.sidebar-toggle i {
+  display: grid;
+  place-items: center;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+}
+
+.layout-menu i::before,
+.sidebar-toggle i::before {
+  display: block;
+  line-height: 1;
 }
 
 .layout-menu {
