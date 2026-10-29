@@ -2,9 +2,12 @@ import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig 
 
 import { pushToast } from '@/shared/toast/toastStore';
 
+import { selectAccessToken, sessionCleared, sessionSet } from '@/store/session/sessionSlice';
+import { store } from '@/store/store';
+
 import type { ApiConfig, ApiEndpoints } from './api.config';
 import { createApiFailure, interpretResponse, isAuthFailure, type ApiResult } from './apiError';
-import { clearSession, getSession, readAuthSessionFromBody, setSession } from './authSession';
+import { readAuthSessionFromBody } from './authSession';
 
 declare module 'axios' {
   interface AxiosRequestConfig {
@@ -72,7 +75,7 @@ function createHttp(config: ApiConfig): AxiosInstance {
       return request;
     }
 
-    const token = getSession()?.accessToken;
+    const token = selectAccessToken(store.getState());
     if (token && !request.headers.has('Authorization')) {
       request.headers.set('Authorization', `Bearer ${token}`);
     }
@@ -118,7 +121,7 @@ export function createApiClient(config: ApiConfig): ApiClient {
   async function request<T>(endpoint: keyof ApiEndpoints, options: ApiRequestOptions = {}): Promise<ApiResult<T>> {
     const result = await send<T>(http, config, endpoint, options);
     if (!result.ok && options.auth !== false && isAuthFailure(result.status)) {
-      clearSession();
+      store.dispatch(sessionCleared());
     }
     return finish(result, options.toast);
   }
@@ -145,7 +148,7 @@ export function createApiClient(config: ApiConfig): ApiClient {
       if (result.ok) {
         const session = readAuthSessionFromBody(result.data);
         if (session) {
-          setSession(session);
+          store.dispatch(sessionSet(session.accessToken));
         }
       }
       return result;

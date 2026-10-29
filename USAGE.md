@@ -157,13 +157,13 @@ If the body has a message, it is shown in an error toast. Pass `{ toast: false }
 
 `api.login(body)` posts to the `login` endpoint and does not send a bearer token. On success it stores the JWT from `jwt`, `jwtToken`, or `jwt_token`. Those fields may also sit under `data`.
 
-The token is saved in the `boilerplate-access` cookie. Later calls send `Authorization: Bearer …` plus `x-api-key`. A `401` removes the cookie. `clearSession` from `useAuth` removes it too.
+The token is kept in the Redux session. A saga writes it to the `boilerplate-access` cookie and reads that cookie back when the app starts. Later calls send `Authorization: Bearer …` plus `x-api-key`. A `401` clears the session. `clearSession` from `useAuth` clears it too.
 
 ```tsx
 const { isAuthenticated, accessToken, clearSession } = useAuth();
 ```
 
-`isAuthenticated` is true when the cookie holds a token. `accessToken` is that token, or `null`.
+`isAuthenticated` is true when the session holds a token. `accessToken` is that token, or `null`.
 
 ## Routes
 

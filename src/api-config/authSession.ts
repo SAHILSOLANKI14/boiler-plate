@@ -13,12 +13,6 @@ export type AuthSession = {
   accessToken: string;
 };
 
-type SessionListener = () => void;
-
-const listeners = new Set<SessionListener>();
-
-let session = readStoredSession();
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -51,52 +45,15 @@ export function readAuthSessionFromBody(body: unknown): AuthSession | null {
   return nested ? { accessToken: nested } : null;
 }
 
-function readStoredSession(): AuthSession | null {
+export function readAccessCookie(): string | null {
   const accessToken = cookies.get(accessCookie)?.trim();
-  return accessToken ? { accessToken } : null;
+  return accessToken ? accessToken : null;
 }
 
-function sameSession(current: AuthSession | null, next: AuthSession | null): boolean {
-  if (current === next) {
-    return true;
-  }
-  if (!current || !next) {
-    return false;
-  }
-  return current.accessToken === next.accessToken;
+export function writeAccessCookie(accessToken: string): void {
+  cookies.set(accessCookie, accessToken);
 }
 
-function notify(): void {
-  for (const listener of listeners) {
-    listener();
-  }
-}
-
-export function getSession(): AuthSession | null {
-  return session;
-}
-
-export function subscribeSession(listener: SessionListener): () => void {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
-}
-
-export function setSession(next: AuthSession | null): void {
-  if (sameSession(session, next)) {
-    return;
-  }
-
-  session = next;
-  if (next) {
-    cookies.set(accessCookie, next.accessToken);
-  } else {
-    cookies.remove(accessCookie);
-  }
-  notify();
-}
-
-export function clearSession(): void {
-  setSession(null);
+export function clearAccessCookie(): void {
+  cookies.remove(accessCookie);
 }

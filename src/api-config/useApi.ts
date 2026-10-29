@@ -1,8 +1,12 @@
-import { createContext, useContext, useMemo, useSyncExternalStore } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectAccessToken, sessionCleared, sessionSet } from '@/store/session/sessionSlice';
+import type { AppDispatch } from '@/store/store';
 
 import { apiEndpoints, apiUrl, type ApiConfig, type ApiEndpoints } from './api.config';
 import { createApiClient, type ApiClient } from './apiClient';
-import { clearSession, getSession, setSession, subscribeSession, type AuthSession } from './authSession';
+import type { AuthSession } from './authSession';
 
 export type { ApiFailure, ApiResult, ApiSuccess } from './apiError';
 export type { ApiRequestOptions } from './apiClient';
@@ -60,11 +64,21 @@ export function useAuth(): {
   setSession: (session: AuthSession) => void;
   clearSession: () => void;
 } {
-  const session = useSyncExternalStore(subscribeSession, getSession);
+  const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch<AppDispatch>();
+  const setSession = useCallback(
+    (session: AuthSession) => {
+      dispatch(sessionSet(session.accessToken));
+    },
+    [dispatch],
+  );
+  const clearSession = useCallback(() => {
+    dispatch(sessionCleared());
+  }, [dispatch]);
 
   return {
-    isAuthenticated: session !== null,
-    accessToken: session?.accessToken ?? null,
+    isAuthenticated: accessToken !== null,
+    accessToken,
     setSession,
     clearSession,
   };
